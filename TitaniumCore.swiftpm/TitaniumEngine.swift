@@ -1,6 +1,7 @@
 import SwiftUI
 import WebKit
 
+// 🛡️ TITANIUM ENGINE CORE
 struct TitaniumWebView: UIViewRepresentable {
     @Binding var url: URL
 
@@ -11,28 +12,44 @@ struct TitaniumWebView: UIViewRepresentable {
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = preferences
         
-        // 🧠 THE MANUS PROTOCOL: Injecting the AI Extractor
-        // This JavaScript scrapes the website and sends it to our Swift Coordinator
-        let agentScript = """
-        function extractDataForAI() {
-            var rawText = document.body.innerText;
-            // Send the first 500 characters back to the iPad's Native Memory
-            window.webkit.messageHandlers.titaniumAgent.postMessage(rawText.substring(0, 500));
-        }
-        // Run it after 2 seconds
-        setTimeout(extractDataForAI, 2000);
+        // 1. Engine Initialization
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.navigationDelegate = context.coordinator
+        webView.allowsBackForwardNavigationGestures = true
+        webView.customUserAgent = "TitaniumCore/2.0 (iPad; Armored Engine)"
+        
+        // 🛡️ 2. THE TITANIUM SHIELD (Hardware-Level Ad & Tracker Blocker)
+        // This JSON defines exactly what to kill before it hits the iPad's memory.
+        let blockRules = """
+        [
+            {
+                "trigger": { "url-filter": ".*(google-analytics|doubleclick|adsystem|adsense|facebook\\\\.com/tr).*" },
+                "action": { "type": "block" }
+            },
+            {
+                "trigger": { "url-filter": ".*" },
+                "action": {
+                    "type": "css-display-none",
+                    "selector": ".ad, .ads, .advert, .banner, .popup, [class*='ad-'], [id*='ad-'], .sponsored"
+                }
+            }
+        ]
         """
         
-        let script = WKUserScript(source: agentScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-        config.userContentController.addUserScript(script)
-        
-        // 🔌 Wiring the bridge so Javascript can talk to Swift
-        config.userContentController.add(context.coordinator, name: "titaniumAgent")
-
-        let webView = WKWebView(frame: .zero, configuration: config)
-        webView.navigationDelegate = context.coordinator 
-        webView.allowsBackForwardNavigationGestures = true 
-        webView.customUserAgent = "TitaniumCore/2.0 (iPad; AI-Native Engine)" 
+        // 3. Compile the armor and inject it into the Engine
+        WKContentRuleListStore.default().compileContentRuleList(
+            forIdentifier: "TitaniumShield",
+            encodedContentRuleList: blockRules.data(using: .utf8)
+        ) { ruleList, error in
+            if let error = error {
+                print("❌ Shield Malfunction: \(error.localizedDescription)")
+                return
+            }
+            if let armor = ruleList {
+                webView.configuration.userContentController.add(armor)
+                print("🛡️ Titanium Shield: Online and armed. Trackers will be terminated.")
+            }
+        }
         
         return webView
     }
@@ -47,26 +64,8 @@ struct TitaniumWebView: UIViewRepresentable {
         Coordinator(self)
     }
 
-    // 🛡️ THE COORDINATOR: Now equipped with WKScriptMessageHandler
-    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+    class Coordinator: NSObject, WKNavigationDelegate {
         var parent: TitaniumWebView
 
         init(_ parent: TitaniumWebView) {
             self.parent = parent
-        }
-        
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            print("✅ Titanium Engine: Page locked.")
-        }
-
-        // 🚨 THE CRITICAL MOVE: Receiving data FROM the website
-        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "titaniumAgent" {
-                if let extractedText = message.body as? String {
-                    print("🤖 MANUS BRIDGE ACTIVATED. Extracted Data: \\n\\n\\(extractedText)...")
-                    // In the future, we will send this text directly to a local LLM!
-                }
-            }
-        }
-    }
-}
