@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var tabManager: TabManager
-    @EnvironmentObject var themeManager: ThemeManager // 🆕 Listening to the Theme
+    @EnvironmentObject var themeManager: ThemeManager 
     
     @State private var addressText = ""
     @State private var showingImagePicker = false
@@ -10,28 +10,33 @@ struct ContentView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             
-            // 0. 🎨 THE CUSTOM BACKGROUND LAYER (New Tab Page)
+            // 0. 🎨 THE CUSTOM BACKGROUND LAYER
             if let bgImage = themeManager.backgroundImage {
                 Image(uiImage: bgImage)
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
             } else {
-                // Default Titanium gradient if no image is uploaded
                 LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.2), Color.black]), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
             }
 
-            // 1. THE ENGINE LAYER (Only shows if there is an active website)
-            if let activeURL = tabManager.activeURL {
-                TitaniumWebView(url: .constant(activeURL))
-                    .ignoresSafeArea()
+            // 1. 🚀 THE MAMMOTH MEMORY POOL (The Critical UI Upgrade)
+            // We load ALL tabs at once, but only make the active one visible.
+            // This guarantees instant, zero-reload tab switching.
+            ZStack {
+                ForEach($tabManager.tabs) { $tab in
+                    TitaniumWebView(url: $tab.url)
+                        .ignoresSafeArea()
+                        // Keep alive in memory, but hide if not active
+                        .opacity(tabManager.activeTabId == tab.id ? 1.0 : 0.0)
+                        // Disable interactions on hidden tabs so you don't click invisible buttons
+                        .allowsHitTesting(tabManager.activeTabId == tab.id) 
+                }
             }
 
-            // 2. THE COMMAND CENTER
+            // 2. THE COMMAND CENTER (Same as before)
             VStack(spacing: 12) {
-                
-                // --- THE TAB BAR ---
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(tabManager.tabs) { tab in
@@ -49,9 +54,7 @@ struct ContentView: View {
                     .padding(.horizontal)
                 }
                 
-                // --- THE ADDRESS BAR ---
                 HStack {
-                    // 🆕 Theme Toggle Button
                     Button(action: { themeManager.toggleTheme() }) {
                         Image(systemName: themeManager.isDarkMode ? "moon.fill" : "sun.max.fill")
                             .foregroundColor(.blue)
@@ -65,7 +68,6 @@ struct ContentView: View {
                         .background(Color.white.opacity(0.15))
                         .cornerRadius(12)
                     
-                    // 🆕 Background Upload Button
                     Button(action: { showingImagePicker = true }) {
                         Image(systemName: "photo.on.rectangle")
                             .font(.title2)
@@ -91,8 +93,7 @@ struct ContentView: View {
         }
         .onAppear {
             addressText = tabManager.activeURL?.absoluteString ?? ""
-        }
-        // 🆕 Spawns the iPad Photo Picker when the button is pressed
+         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(image: $themeManager.backgroundImage)
         }
@@ -100,9 +101,7 @@ struct ContentView: View {
 
     func loadPage() {
         var target = addressText.lowercased()
-        if !target.hasPrefix("http") {
-            target = "https://" + target
-        }
+        if !target.hasPrefix("http") { target = "https://" + target }
         tabManager.createNewTab(url: target)
     }
 }
