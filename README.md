@@ -1,37 +1,40 @@
-# 🌐 Titanium Core Browser v1.0
+# 🛡️ Titanium Core Browser v1.0
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Platform: iPadOS](https://img.shields.io/badge/Platform-iPadOS%20%7C%20iOS-lightgrey.svg)]()
+[![Language: Swift 6](https://img.shields.io/badge/Language-Swift%206-orange.svg)]()
 
-**A pure, ultra-lightweight web browser. Zero AI. Zero bloat. Just speed.**
+**A pure, ultra-lightweight native web browser. Zero Electron bloat. Just metal-level speed.**
 
-The modern web is infested with heavy AI integrations, LLM background processes, and privacy-invading telemetry. **Titanium Core Browser v1.0** strips all of that away. This is a traditional, high-performance web browser built for developers and power users who just want to surf the web without an algorithm reading over their shoulder.
+The modern web is infested with heavy JavaScript wrappers (like Electron) that consume massive amounts of RAM and drain battery life. **Titanium Core v1.0** strips all of that away. Built completely natively for iPadOS using Swift and Apple's advanced WebKit engine, this is a high-performance daily driver designed for power users who demand instant rendering and fluid gestures.
 
 ### ⚡ Why Titanium Core?
 
-| Feature | Modern Browsers | 🌐 Titanium Core v1.0 |
+| Feature | Modern Desktop Browsers | 🛡️ Titanium Core v1.0 |
 | :--- | :--- | :--- |
-| **AI Integration** | Forced LLMs & Copilots | **ZERO. Completely AI-Free.** |
-| **Performance** | Sluggish, RAM-heavy | **Instant rendering, low memory footprint.** |
-| **Privacy** | Telemetry tracking | **No background data harvesting.** |
+| **Engine** | Heavy Chromium/Electron | **Native WKWebView (Direct Apple integration)** |
+| **Performance** | Sluggish, RAM-heavy | **Instant rendering, micro-memory footprint.** |
+| **Architecture** | Spaghetti Code | **State-Driven MVVM (Coordinator Pattern)** |
 
 ---
 
-## 🚀 Core Philosophy
+## 🧠 Core Philosophy
 
-1. **No Artificial Intelligence:** There are no chatbots, no smart summaries, and no API keys required. It parses HTML/CSS/JS and renders it. That is all.
-2. **Micro-Footprint:** Built to consume the absolute minimum amount of RAM necessary to keep your tabs alive.
-3. **Unbreakable Core:** Designed to be a rock-solid daily driver that doesn't crash when loading heavy DOM elements.
+1. **Native Dominance:** No Python wrappers, no `pip install`, and no web-based UI. We use pure SwiftUI to communicate directly with the iPad's hardware.
+2. **Micro-Footprint:** Built to consume the absolute minimum amount of RAM. By using native Apple frameworks, Titanium Core keeps your tabs alive without crashing your device.
+3. **Agent-Ready (The "Manus" Protocol):** While it operates as a lightweight daily driver, the core architecture includes a JavaScript bridge designed to seamlessly integrate with autonomous AI agents in the future.
 
 ---
 
-## 🛠️ Quick Start
+## 🛠️ Quick Start (iPad/iOS)
 
-**1. Clone the core:**
-Download or clone this repository to your local machine.
+Because Titanium Core is a native Apple application, there are no terminal commands or `requirements.txt` files to run. 
 
-**2. Install standard dependencies:**
-Install the rendering engine via your Python package manager.
-`pip install -r requirements.txt`
+**1. Clone the Core:**
+Use an app like **Working Copy** to clone this repository directly to your iPad.
+
+**2. Open the Engine:**
+Locate the `TitaniumCore.swiftpm` folder and open it using the **Swift Playgrounds** app on your iPad.
 
 **3. Launch the Browser:**
-Run `main.py` in your terminal to open the Titanium Core interface and start browsing.
+Tap the **Play/Run** button inside Swift Playgrounds. The app will compile instantly and launch the Titanium Core interface.
